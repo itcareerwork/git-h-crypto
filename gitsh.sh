@@ -1,6 +1,6 @@
 #!/bin/bash
 lng="ru"
-
+colorset=("34" "" "" "24" "15" "1" "24" "15" "1")
 ########## Danger ###########################
 #        Danger! Do not change the position 2 (second) line! (etc lng=*)
 #        It is read in the flow!
@@ -14,65 +14,78 @@ language_ru=("Русский" "Добавить все/коммит")
 
 lng="language_$lng[@]"; lng=("${!lng}")
 
-#&& sleep 2
+
 
 colors() {
 	
-	clear
-	let backgr=16
-	let txts=15
- 	for backgr in {0..255}; do
-		if (( $backgr % 16 == 0 )); then 
-			echo -e ""
-		fi
+	
+	if [[ "$1" == "set"  ]]; then
+	
+		clear
+		let backgr=234
+		let txts=34
+		
+	 	for col in {0..255}; do
+	 		if (( "$col" == "0"  )); then col="256"; fi
 
-		if (( "$backgr" < 10 )); then
-			echo -en " \e[38;5;$txts;48;5;$backgr;1m$txts;$backgr\e[0m"
-		elif (( "$backgr" < 100 )); then
-			echo -en " \e[38;5;$txts;48;5;$backgr;1m$txts;$backgr\e[0m"
-		else
-			echo -en " \e[38;5;$txts;48;5;$backgr;1m$txts;$backgr\e[0m"
-		fi
+	 		backgr=$col
+	 		txts=$col
+			if (( $col % 16 == 0 )); then echo -e "\n"; 		fi
+			printf " \e[48;5;$backgr;38;5;$txts;22m%7s\e[0m" "$backgr;$txts"
 
-		(( i++ ))
-	 done
-echo
-expr length "$txts;$backgr"
+
+
+
+done
+
+		
+		
+		
+		
+		
+								
+			echo -e "\n\nExample: "
+			echo -e "\r$(colors 'tm' "[$(date +"%T")]") $(colors 'pt' "${PWD%/*}"/)$(colors 'fl'  "$(basename   "$PWD")")"
+			return
+	fi
+	
+	if [[ "$1" == "tm"  ]]; then
+		echo "\e[48;5;${colorset[0]};38;5;${colorset[1]};${colorset[2]}m$2\e[0m"
+	elif [[ "$1" == "pt" ]]; then
+		echo "\e[48;5;${colorset[3]};38;5;${colorset[4]};${colorset[5]}m$2\e[0m"
+	elif [[ "$1" == "fl" ]]; then
+		echo "\e[48;5;${colorset[6]};38;5;${colorset[7]};${colorset[8]}m$2\e[0m"
+		
+
+	fi
+	
+	
 }
 
 
 pwds() {
 
+
 echo ""
 
 
+colors set
 
 	echo ---------
-
-	echo -en "$PWD"
-	sleep 0.1  
-	echo -en "\r\e[2K\e[7m$PWD"
-	sleep 0.1 
-	echo -en "\r\e[2K\e[27m$PWD"
-	sleep 0.1 
-	echo -en "\r\e[2K\e[7m$PWD"
-	sleep 0.1 
-	echo -en  "\r\e[2K\e[27m$PWD"
-	sleep 0.1 
-	echo -en "\r\e[0K\e[32m[$(date +"%T")]\e[0;1m"
-	echo -e  "\e[48;5;24;38;5;15m${PWD%/*}/\e[0;1;33m$(basename "$PWD")\e[0m"
-
 	
+	for pw in {40..47}; do
+		echo -en "\r\e[$pw;1m$PWD\e[0m"
+		sleep 0.05 
+	done 
+	echo -e "\r$(colors 'tm' "[$(date +"%T")]") $(colors 'pt' "${PWD%/*}"/)$(colors 'fl'  "$(basename   "$PWD")")"
 
 	 echo ---------
-colors
-
-# 23,24,65,66,71,101,102
+	
 
 }
-#rc=E8,:  восстановление позиции курсора
 
-#sc=E7,:  сохранение положения курсора##
+
+
 
 main() {
 	menu0=("menu0" "${lng[1]};gitadd" "Git push;gitpush" "Git create tag;gittag" "Git select proj;gitselect" "Git init;gitinit" "Git clone;gitclone" "New Git project;gitnew")
