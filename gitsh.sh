@@ -20,11 +20,13 @@ colors() {
 	
 	
 	if [[ "$1" == "set"  ]]; then
-	
+		let r_col=$(tput cols)
+		let r_lin=$(tput lines)
 		clear
+		echo -e '\e[8;44;130t'		
 		let backgr=234
 		let txts=34
-		
+
 	 	for col in {0..255}; do
 	 		if (( "$col" == "0"  )); then col="256"; fi
 
@@ -32,21 +34,20 @@ colors() {
 	 		txts=$col
 			if (( $col % 16 == 0 )); then echo -e "\n"; 		fi
 			printf " \e[48;5;$backgr;38;5;$txts;22m%7s\e[0m" "$backgr;$txts"
+		done
 
+		echo -e "\n\nExample: "
+		echo -e "\r$(colors 'tm' "[$(date +"%T")]") $(colors 'pt' "${PWD%/*}"/)$(colors 'fl'  "$(basename   "$PWD")")"
+			
 
-
-
-done
-
+		echo -e "\e[8;${r_lin};${r_col}t"
 		
 		
+
+		echo
+		echo
 		
-		
-		
-								
-			echo -e "\n\nExample: "
-			echo -e "\r$(colors 'tm' "[$(date +"%T")]") $(colors 'pt' "${PWD%/*}"/)$(colors 'fl'  "$(basename   "$PWD")")"
-			return
+		return
 	fi
 	
 	if [[ "$1" == "tm"  ]]; then
