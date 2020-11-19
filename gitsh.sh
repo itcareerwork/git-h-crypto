@@ -21,10 +21,10 @@ language_en=(	"English"
 		"New Git project" 
 		"Change language"
 		)
-message_en=("English" "Select item" "Wrong! This item does not exist" "Repository not found\nPlease, select Git init pepository" "Added ALL files" "Enter you commit" "Changes recorded")
+message_en=("English" "Select item" "Wrong! This item does not exist" "Repository not found\nPlease, select Git init pepository" "Added ALL files" "Enter you commit" "Changes recorded" "There is nothing to commit, no changes")
 
 language_ru=("Русский" "Выход" "Настройки" "Основное меню" "Git добавить ВСЕ файлы/коммит" "" "" "" "" "" "" "Изменить язык")
-message_ru=("Русский" "Выберите пункт" "Неверно! Этого пункта не существует" "Репозиторий не найден\nПожалуйста, инициализируйте репозиторий, выбав Git init" "Добавление всех файлов" "Введите ваш коммит" "Изменения зарегистрированы")
+message_ru=("Русский" "Выберите пункт" "Неверно! Этого пункта не существует" "Репозиторий не найден\nПожалуйста, инициализируйте репозиторий, выбав Git init" "Добавление всех файлов" "Введите ваш коммит" "Изменения зарегистрированы" "Фиксировать нечего, изменений нет")
 
 #####################################
 
@@ -101,7 +101,10 @@ colors() {
 	elif [[ "$1" == "err" ]]; then
 		echo -e "\e[48;5;256;38;5;160;1m$2\e[0m"
 	elif [[ "$1" == "title" ]]; then
-		echo -e "\e[48;5;256;38;5;226;22m$2\e[0m"	
+		echo -e "\e[48;5;256;38;5;226;22m$2\e[0m"
+	elif [[ "$1" == "item" ]]; then
+		echo -e "\e[48;5;256;38;5;15;1m$2\e[0m"	
+	
 
 	fi
 	
@@ -147,7 +150,7 @@ prints() {
 	done
 	echo ----------
 
-	read -s -n1 -p "$2: " item	
+	read -s -n1 -p "$(colors "item" "$2: ")" item	
 	
 	case $item in
 		[1-$((${#menu[@]}-1))] ) colors "ok" "$item ) $(prints "post" "${menu[$item]}")"
@@ -174,30 +177,24 @@ options() {
 
 err() {
 
-	if [[ "$?" != "0" ]] ; then colors "err" "$1" ; return 1 ; fi
+	if [[ "$?" != "0" ]] ; then 
+		colors "err" "$1" 
+		sleep 1
+		return 1 
+	fi
 
 }
 
 
 gitadd() {
 	git add .
-#	err "${msg[3]}" || return
-
+	err "${msg[3]}" || return
 	echo "${msg[4]} ..."
-
-	
-
 	git commit --porcelain 
-	err "$? notnotnot" ||  return 
-	 
-	
-
-read -p "${msg[5]}: " comm
-git commit -m "$comm"
-
-
+	err "${msg[7]}" ||  return 
+	 read -p "$(colors "item" "${msg[5]}: ")" comm
+	 git commit -m "$comm"
 	colors "ok" "${msg[6]}"
-	exit
 } 
 
 
