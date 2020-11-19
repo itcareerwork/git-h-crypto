@@ -8,11 +8,23 @@ colorset=("256" "34" "22" "24" "15" "1" "256" "226" "1")
 #        You can add your language using the same template
 
 
-language_en=("English" "Quit" "Options" "Main menu" "Git add ALL files/commit" "Git push" "Git create tag" "Git select proj" "Git init" "Git clone" "New Git project" "Change language")
-message_en=("English" "Select item" "Wrong! This item does not exist")
+language_en=(	"English" 
+		"Quit" 
+		"Options" 
+		"Main menu" 
+		"Git add ALL files/commit" 
+		"Git push" 
+		"Git create tag" 
+		"Git select proj" 
+		"Git init" 
+		"Git clone" 
+		"New Git project" 
+		"Change language"
+		)
+message_en=("English" "Select item" "Wrong! This item does not exist" "Repository not found\nPlease, select Git init pepository" "Added ALL files" "Enter you commit" "Changes recorded")
 
 language_ru=("Русский" "Выход" "Настройки" "Основное меню" "Git добавить ВСЕ файлы/коммит" "" "" "" "" "" "" "Изменить язык")
-message_ru=("Русский" "Выберите пункт" "Неверно! Этого пункта не существует")
+message_ru=("Русский" "Выберите пункт" "Неверно! Этого пункта не существует" "Репозиторий не найден\nПожалуйста, инициализируйте репозиторий, выбав Git init" "Добавление всех файлов" "Введите ваш коммит" "Изменения зарегистрированы")
 
 #####################################
 
@@ -97,6 +109,7 @@ colors() {
 }
 
 
+
 pwds() {
 	echo ""
 	echo ----------
@@ -134,45 +147,66 @@ prints() {
 	done
 	echo ----------
 
+	read -s -n1 -p "$2: " item	
+	
+	case $item in
+		[1-$((${#menu[@]}-1))] ) colors "ok" "$item ) $(prints "post" "${menu[$item]}")"
+		$(prints "com" "${menu[$item]}") ;;
+		"q" ) echo; exit;;
+		* ) colors "err" "[ $item ]->: ${msg[2]}"; sleep 2 ;;
+	esac	
+	
+
+
 }
 
-gitpush() {
-	echo "You select git Push"
+gitinit() {
+	git init
 
 }
 
 options() {
 
-	menu1=("${lng[2]};options" "${lng[11]};languages set" "${lng[1]};exit")
-	prints "menu1[@]"
-	read -s -n1 -p "${msg[1]}: " item
-	case $item in
-		[1-$((${#menu1[@]}-1))] ) colors "ok" "$item ) $(prints "post" "${menu1[$item]}")"
-		$(prints "com" "${menu1[$item]}") ;;
-		"q" ) echo; exit;;
-		* ) colors "err" "[ $item ]->: ${msg[2]}"; sleep 2 ; options ;;
-	esac	
+	local menu1=("${lng[2]};options" "${lng[11]};languages set" "${lng[1]};exit")
+	prints "menu1[@]" "${msg[1]}"
+
+}
+
+err() {
+
+	if [[ "$?" != "0" ]] ; then colors "err" "$1" ; return 1 ; fi
 
 }
 
 
-main() {
-	menu0=("${lng[3]};main" "${lng[2]};options" "${lng[1]};exit")
+gitadd() {
+	git add .
+#	err "${msg[3]}" || return
+
+	echo "${msg[4]} ..."
+
 	
+
+	git commit --porcelain 
+	err "$? notnotnot" ||  return 
+	 
+	
+
+read -p "${msg[5]}: " comm
+git commit -m "$comm"
+
+
+	colors "ok" "${msg[6]}"
+	exit
+} 
+
+
+main() {
+
+	local menu0=("${lng[3]};main" "${lng[4]};gitadd" "${lng[8]};gitinit" "${lng[2]};options" "${lng[1]};exit")
 	
 	while [ "$item" != "q" ] ; do 
-	prints "menu0[@]"
-
-	read -s -n1 -p "${msg[1]}: " item	
-
-	case $item in
-		[1-$((${#menu0[@]}-1))] ) colors "ok" "$item ) $(prints "post" "${menu0[$item]}")"
-		$(prints "com" "${menu0[$item]}") ;;
-		"q" ) echo; exit;;
-		* ) colors "err" "[ $item ]->: ${msg[2]}"; sleep 2 ;;
-	esac	
-	
-	
+		prints "menu0[@]" "${msg[1]}"
 	done
 
 }
