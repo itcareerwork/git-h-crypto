@@ -36,7 +36,7 @@ languages() {
 		
 		echo "0" "languagelanguage"
 		echo "1" ${language_en[3]}
-		echo "2" ${lng[3]}
+		echo "2" $lng
 		
 		#read -p "lang: " lngs
 		#sed  -i -r "/^langset=/s/langset=[\"\']?$langset[\"\']?/langset=$lngs/" "${0}"
@@ -47,13 +47,12 @@ languages() {
 	lng="language_$langset[@]"; lng=("${!lng}")
 	msg="message_$langset[@]"; msg=("${!msg}")
 
-	for repllang in ${!language_en[@]} ${!message_en[@]} ; do
-	
-		if [[ ! ${lng[$repllang]} ]] ; then
-			lng[$repllang]=${language_en[$repllang]}
+	for lnglang in ${!language_en[@]} ${!message_en[@]} ; do
+		if [[ ! ${lng[$lnglang]} ]] ; then
+			lng[$lnglang]=${language_en[$lnglang]}
 		fi
-		if [[ ! ${msg[$repllang]} ]] ; then
-			msg[$repllang]=${message_en[$repllang]}
+		if [[ ! ${msg[$lnglang]} ]] ; then
+			msg[$lnglang]=${message_en[$lnglang]}
 		fi
 	done
 }
