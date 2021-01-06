@@ -1,5 +1,5 @@
 #!/bin/bash
-langset=en
+langset=ru
 colorset=("256" "34" "22" "24" "15" "1" "256" "226" "1")
 ########## Danger ###########################
 #        Danger! Do not change the position 2 (second) line! (etc langset=*)
@@ -20,11 +20,12 @@ language_en=(	"English"
 		"Git clone" 
 		"New Git project" 
 		"Change language"
+		"Language selection"
 		)
-message_en=("English" "Select item" "Wrong! This item does not exist" "Repository not found\nPlease, select Git init pepository" "Added ALL files" "Enter you commit" "Changes recorded" "There is nothing to commit, no changes")
+message_en=("English" "Select item" "Wrong! This item does not exist" "Repository not found\nPlease, select Git init pepository" "Added ALL files" "Enter you commit" "Changes recorded" "There is nothing to commit, no changes" "Select a language"  "The language has been changed to" "Start the program again")
 
-language_ru=("Русский" "Выход" "Настройки" "Основное меню" "Git добавить ВСЕ файлы/коммит" "" "" "" "" "" "" "Изменить язык")
-message_ru=("Русский" "Выберите пункт" "Неверно! Этого пункта не существует" "Репозиторий не найден\nПожалуйста, инициализируйте репозиторий, выбав Git init" "Добавление всех файлов" "Введите ваш коммит" "Изменения зарегистрированы" "Фиксировать нечего, изменений нет")
+language_ru=("Русский" "Выход" "Настройки" "Основное меню" "Git добавить ВСЕ файлы/коммит" "" "" "" "" "" "" "Изменить язык" "Выбор языка")
+message_ru=("Русский" "Выберите пункт" "Неверно! Этого пункта не существует" "Репозиторий не найден\nПожалуйста, инициализируйте репозиторий, выбав Git init" "Добавление всех файлов" "Введите ваш коммит" "Изменения зарегистрированы" "Фиксировать нечего, изменений нет" "Выберите язык" "Язык изменен на" "Запустите программу заново")
 
 #####################################
 
@@ -33,27 +34,42 @@ message_ru=("Русский" "Выберите пункт" "Неверно! Эт
 languages() {
 
 	if [ "$1" == "set" ] ; then
-		
-		echo "0" "languagelanguage"
-		echo "1" ${language_en[3]}
-		echo "2" ${lng[3]}
-		
-		#read -p "lang: " lngs
-		#sed  -i -r "/^langset=/s/langset=[\"\']?$langset[\"\']?/langset=$lngs/" "${0}"
 
-
+		local lng_sfx=($(sed -r -n -e  "s/^\s?+language_(..).+/\1/p" "${0}"))
+		local lng_menu=("${lng[12]};languages set")
+		for a in ${lng_sfx[@]} ; do
+			local d="language_$a[@]"; d=("${!d}")
+			lng_menu+=("${d[0]};languages setmenu $a")
+		done
+		
+		lng_menu+=("${lng[1]};exit")
+		
+		prints "lng_menu[@]" "${msg[8]}"
+		
+	fi
+	
+	
+	
+	if [ "$1" == "setmenu" ] ; then
+		
+		sed  -i -r "/^langset=/s/langset=[\"\']?$langset[\"\']?/langset=$2/" "${0}"
+		local msg_oth="message_$2[@]"; msg_oth=("${!msg_oth}")
+		
+		colors "ok" "${msg[9]} ${msg_oth[0]}. ${msg[10]}" 
+		colors "ok" "${msg_oth[9]} ${msg_oth[0]}. ${msg_oth[10]}"
+		exit
 	fi
 
 	lng="language_$langset[@]"; lng=("${!lng}")
 	msg="message_$langset[@]"; msg=("${!msg}")
 
-	for repllang in ${!language_en[@]} ${!message_en[@]} ; do
+	for b in ${!language_en[@]} ${!message_en[@]} ; do
 	
-		if [[ ! ${lng[$repllang]} ]] ; then
-			lng[$repllang]=${language_en[$repllang]}
+		if [[ ! ${lng[$b]} ]] ; then
+			lng[$b]=${language_en[$b]}
 		fi
-		if [[ ! ${msg[$repllang]} ]] ; then
-			msg[$repllang]=${message_en[$repllang]}
+		if [[ ! ${msg[$b]} ]] ; then
+			msg[$b]=${message_en[$b]}
 		fi
 	done
 }
