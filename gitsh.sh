@@ -108,24 +108,15 @@ colors() {
 		return
 	fi
 	
-	if [[ "$1" == "tm"  ]]; then
-		echo "\e[48;5;${colorset[0]};38;5;${colorset[1]};${colorset[2]}m$2\e[0m"
-	elif [[ "$1" == "pt" ]]; then
-		echo "\e[48;5;${colorset[3]};38;5;${colorset[4]};${colorset[5]}m$2\e[0m"
-	elif [[ "$1" == "fl" ]]; then
-		echo "\e[48;5;${colorset[6]};38;5;${colorset[7]};${colorset[8]}m$2\e[0m"
-	elif [[ "$1" == "ok" ]]; then
-		echo -e "\e[48;5;256;38;5;34;1m$2\e[0m"
-	elif [[ "$1" == "err" ]]; then
-		echo -e "\e[48;5;256;38;5;160;1m$2\e[0m"
-	elif [[ "$1" == "title" ]]; then
-		echo -e "\e[48;5;256;38;5;226;22m$2\e[0m"
-	elif [[ "$1" == "item" ]]; then
-		echo -e "\e[48;5;256;38;5;15;22m$2\e[0m"	
-	
-
-	fi
-	
+	case "$1" in
+		"tm" ) echo "\e[48;5;${colorset[0]};38;5;${colorset[1]};${colorset[2]}m$2\e[0m" ;;
+		"pt" ) echo "\e[48;5;${colorset[3]};38;5;${colorset[4]};${colorset[5]}m$2\e[0m" ;;
+		"fl" ) echo "\e[48;5;${colorset[6]};38;5;${colorset[7]};${colorset[8]}m$2\e[0m" ;;
+		"ok" ) echo -e "\e[48;5;256;38;5;34;1m$2\e[0m" ;;
+		"err" ) echo -e "\e[48;5;256;38;5;160;1m$2\e[0m" ;;
+		"title" ) echo -e "\e[48;5;256;38;5;226;22m$2\e[0m" ;;
+		"item" ) echo -e "\e[48;5;256;38;5;15;22m$2\e[0m" ;;
+	esac
 	
 }
 
