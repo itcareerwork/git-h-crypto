@@ -188,20 +188,10 @@ gitinit() {
 
 gittest() {
 
-echo "test"
+	echo "test"
 
 }
 
-
-gitselect() {
-
-echo "et" $et
-echo "ttt" $ttt
-
-et1=("${ttt[@]};gittest")
-	prints "ttt[@]" "Select path"
-	
-}
 
 
 options() {
@@ -231,6 +221,7 @@ gitadd() {
 	 read -p "$(colors "item" "${msg[5]}: ")" comm
 	 git commit -m "$comm"
 	colors "ok" "${msg[6]}"
+	
 } 
 
 
