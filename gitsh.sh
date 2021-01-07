@@ -219,8 +219,8 @@ gitadd() {
 main() {
 
 	local menu0=("${lng[3]};main" "${lng[4]};gitadd" "${lng[8]};gitinit" "${lng[7]};gitselect" "${lng[2]};options" "${lng[1]};exit")
-	
-	while [ "$item" != "q" ] ; do 
+
+	while true ; do 
 		prints "menu0[@]" "${msg[1]}"
 	done
 
